@@ -26,6 +26,35 @@ let ContactList=()=>
             });
         }
     },[])
+    let clickDelete = async(contactId)=>
+    {
+        try{
+            
+            let response = await ContactService.deleteContact (contactId);
+            if(response){
+                
+                    setState({...state, loading: true,});
+                    let response = await ContactService.getAllContacts();
+                    
+                    setState({...state, 
+                        loading: false,
+                        contacts: response.data});
+                
+            }
+                    
+            
+        }
+            catch(error)
+            {
+                setState({
+                    ...state,
+                    loading: false,
+                    errorMessage: error.message,
+            
+            
+                })   
+    }
+    };
 
     let {loading,contacts, errorMessage}= state;
     return(
@@ -88,9 +117,9 @@ let ContactList=()=>
                                         <div className="col-md-2 d-flex flex-column align items-center  ">
                                             <Link to={`/contact/view/${contact.id}`} className="btn btn-warning my-1"><i className="fa fa-eye"/></Link>
 
-                                            <Link to={`/contact/edit/:contactId`} className="btn btn-primary my-1"><i className="fa fa-edit"/></Link>
+                                            <Link to={`/contact/edit/${contact.id}`} className="btn btn-primary my-1"><i className="fa fa-edit"/></Link>
 
-                                            <button className="btn btn-danger my-1"><i className="fa fa-trash"/></button>
+                                            <button className="btn btn-danger my-1" onClick={()=>clickDelete(contact.id)}><i className="fa fa-trash"/></button>
                                         </div>
                                     </div>
                                 </div>
